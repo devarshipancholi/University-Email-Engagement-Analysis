@@ -1,0 +1,103 @@
+---
+title: "Project F"
+author: "Devarshi Pancholi"
+date: "9/30/2019"
+output: pdf_document
+---
+
+***Q1 Average Number of  Emails sent per student***
+
+```{r}
+
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(janitor)
+library(sqldf)
+
+dataframe <- read.csv("/Users/devarshipancholi/Desktop/join_data.csv", strip.white = TRUE)
+df1 <- sqldf("select \"Element.Id\" as Element_id, Action, count(Action) as 'Number_of_Emails_Delivered' from dataframe where Action='emailDelivered' group by \"Element.Id\", Action")
+View(df1)
+#str(df1)
+
+sqldf("select Avg(Number_of_Emails_Delivered) from df1")
+
+df2 <- aggregate(df1$Element_id, by = list(df1$Number_of_Emails_Delivered), FUN = length)
+df3 <- df2[1:32, ]
+
+ggplot(df3, aes(x = Group.1, y = x)) +
+  geom_bar(stat = "identity", width = 0.8, fill= "steelblue") +
+  geom_text(aes(label = x), vjust = -0.3, size = 3.5) +
+  ggtitle("Average Number of Email Delivered") +
+  xlab("Number of Email Delivered") +
+  ylab("Number oF Student")
+
+#ggplot(aes(reorder(Tissue, LogFold), LogFold)) + geom_col(aes(fill = LogFold)) + scale_fill_gradient2(low = "white", high = "blue", midpoint = median(df1$LogFold)) + coord_flip() + labs(x = "Tissue")
+
+
+```
+
+***Plot about Rates***
+```{r}
+
+x <- data.frame("Rate" = c("Open Rate", "Click Rate", "Click to Open"), "Values"= c("60", "11", "18"))
+#str(x)
+#View(x)
+
+ggplot(x,aes(x= Rate ,y= Values)) + 
+  geom_bar(stat="identity", position="dodge", width = 0.4, fill= c("steelblue1", "steelblue2", "steelblue3")) + 
+  coord_flip()  +
+  labs(title = "Rates of Email Engagement")+
+  scale_fill_brewer(palette = 'Accent') +
+  geom_text(aes(label = Values), hjust = -0.3, size = 3.5)+
+  theme(plot.title = element_text(hjust = 0.5))
+  
+
+
+#gplot(data = P1, mapping = aes(x = Milestone, y = Engagementrate,fill = Milestone )) + geom_bar(stat= 'identity', width= 0.4) + theme(axis.text.x = element_blank())+theme(panel.grid = element_blank())+ scale_fill_brewer(palette = 'Accent')+labs(x='Milestone', y='Positive Engagement Rate (%)',title = 'Overall Positive Engagement Rate of Each Milestone')+theme(plot.title = element_text(hjust = 0.5))+ geom_text(aes(label = Engagementrate),vjust=-0.3,size=3.5)
+
+```
+
+***Plots about Emails per Country***
+
+```{r}
+
+data.grp0 <- subset(dataframe, Citizenship.Coutry != "") # 428756 missing values in the column of 'Citizenship.Country'
+data.grp1 <- group_by(data.grp0, Citizenship.Coutry)
+#View(data.grp1)
+data.sum1 <- summarise(data.grp1, Freq1= n())
+data.sumf1 <- top_n(data.sum1, n= 15)
+na.exclude(ggplot(data.sumf1,aes(x =reorder(Citizenship.Coutry, -Freq1), y = Freq1))+
+             geom_bar(stat = "identity", fill= "steelblue") +
+             geom_text(aes(label = Freq1), vjust = -0.5, size = 3.5)+
+             labs(x = "Countries",y = "Emails Interactions", title = paste("")))
+```
+
+```{r}
+dataopen <- subset(data.grp0, Action == c("emialOpened", "emailClicked", "linkClick", "emailUnsubscribed", "formSaved", "emailComplaint", "userCreated", "userLogin"))
+dataopen.1 <- aggregate(dataopen$Action, by = list(dataopen$Citizenship.Coutry), FUN = length)
+# Number of open emails: China = 631, India = 433, USA = 2244
+2244 / sum(data.grp1$Citizenship.Coutry == "USA")
+433 / sum(data.grp1$Citizenship.Coutry == "IND")
+631 / sum(data.grp1$Citizenship.Coutry == "CHN")
+```
+
+***Plots for Action***
+
+```{r}
+
+data.Grp2 <- group_by(dataframe, Action ) 
+data.Sum2 <- summarise(data.Grp2, Freq2= n())
+#data.SUMF <- top_n(data.SUM, n= 2)
+ggplot(data.Sum2,aes(x = Action , y = Freq2)) +
+  geom_bar(stat = "identity", fill= "steelblue") +
+  geom_text(aes(label = Freq2), vjust = -0.5, size = 3.5)+
+  labs(x = "Types of Actions",y = "Number of Emails", title = paste(""))
+  
+
+```
+
+
+
+
+

@@ -1,0 +1,62 @@
+---
+title: "project 1"
+author: "Pingjing Wang"
+date: "9/27/2019"
+output: pdf_document
+---
+
+```{r}
+# load data
+#Users <- read.csv("CRTUsers.csv")
+#Emails <- read.csv("CRTemails.csv")
+Joined_data <- read.csv("Joined_Data.csv")
+```
+
+```{r}
+# unique values
+
+# element id
+unique(Users$Element.Id) # 53191 unique users including blank - 53190 unique users
+unique(Emails$Element.Id) # 59345 unique users including blank - 59244 unique users 
+
+sum(Users$Element.Id == "") # 15384 blank element id - means no repeated element id in Users dataset
+sum(Emails$Element.Id == "") # 225896 blank element id
+
+unique(Emails$Id) # 1048575 unique id - no missing values and all unique
+```
+
+```{r}
+# delete rows in User dataset which Element.ID is blank
+Users.new <- subset(Users, Element.Id != "")
+
+# delete rows in Emails dataset which Element.ID is blank
+Emails.new <- subset(Emails, Element.Id != "")
+```
+
+```{r}
+# check 
+sum(Users.new$Element.Id == "")
+sum(Emails.new$Element.Id == "")
+```
+```{r}
+# select columns for Users.new
+Users.new <- Users.new[, c(1, 2, 3, 5, 14, 19, 22, 25, 26, 28, 29, 30)]
+# select columns for Emails.new
+Emails.new <- Emails.new[, c(1, 2, 7, 10, 14, 15, 19, 32)]
+# join data
+join.data <- merge(x = Users.new,y = Emails.new, by = "Element.Id", all.y = TRUE)
+```
+
+```{r}
+write.csv(join.data, file = "/Users/Cecilia/Desktop/BA/Project 1/join_data.csv", quote = F, row.names = F)
+```
+
+
+
+
+
+
+
+
+
+
