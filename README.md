@@ -1,6 +1,3 @@
 # University-Email-Engagement-Analysis
-This is the project where our client data was from Cornell University. 
-Analyzed two different datasets of about a million observations and derived business insights which helped the client to make University Email Engagement process more efficient and cost effective.
-Processed more than a million rows from two different datasets, we provided valuable insights for increasing the efficiency of Email Engagement for the client.
-Improved the conversion rate from prospective students to applicants from 28% to 37% respectively.
+As a part of the course Business Analytics, we were assigned a project regarding Cornell University email-engagement rate. It was basically an open-ended problem with 2 main datasets of about a million observations which analyzed using Alteryx Advance. Once the data was ready to go and cleaned we used R as our statistical analysis software and derived valuable business insights which helped the client to make the Email Engagement process more efficient and cost effective. We improved the conversion rate from prospective students to applicants from 28% to 37% respectively.
 Have a look at the pdf to get a detailed idea on this project.
